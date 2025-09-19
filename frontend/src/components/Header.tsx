@@ -1,12 +1,14 @@
-import { useContext } from 'react'
-import { FilterContext } from '../GlobalProvider'
-import { priorityColors, priorityMap } from '../types/Types'
+import { useFilterContext } from '../GlobalProvider'
+import { priorityColors, priorityMap } from '../utils/utils'
 
 export default function Header() {
   const { query, setQuery, selectedPriorities, setSelectedPriorities } =
-    useContext(FilterContext)
+    useFilterContext()
 
-  function handleOptionClick(e, optionText) {
+  function handleOptionClick(
+    e: React.MouseEvent<HTMLButtonElement>,
+    optionText: number
+  ) {
     e.stopPropagation()
     if (selectedPriorities.includes(optionText)) {
       setSelectedPriorities(

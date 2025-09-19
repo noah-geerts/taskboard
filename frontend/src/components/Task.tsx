@@ -1,16 +1,16 @@
 import { useRef, useEffect, useMemo, useState } from 'react'
 import { useDeleteTask, useUpdateTask } from '../api/taskService'
-import { priorityColors } from '../types/Types'
-import { debounce } from '../utils/debounce'
+import { priorityColors, debounce } from '../utils/utils'
+import type { Task, Priority, Status } from '../domain/Task'
 
-function mod(n, m) {
+function mod(n: number, m: number): number {
   return ((n % m) + m) % m
 }
 
-export default function Task({ task }) {
+export default function Task({ task }: { task: Task }) {
   const updateTask = useUpdateTask()
   const deleteTask = useDeleteTask()
-  const descriptionRef = useRef(null)
+  const descriptionRef = useRef<HTMLTextAreaElement | null>(null)
 
   const [title, setTitle] = useState(task.title)
   const [description, setDescription] = useState(task.description)
@@ -61,7 +61,7 @@ export default function Task({ task }) {
             onChange={(e) =>
               updateTask.mutate({
                 ...task,
-                priority: e.target.value,
+                priority: parseInt(e.target.value, 10) as Priority,
               })
             }
           >
@@ -78,10 +78,10 @@ export default function Task({ task }) {
       <div className="flex flex-row justify-between gap-6">
         <button
           className="text-lg"
-          onClick={(e) =>
+          onClick={() =>
             updateTask.mutate({
               ...task,
-              status: mod(task.status - 1, 3),
+              status: mod(task.status - 1, 3) as Status,
             })
           }
         >
@@ -98,10 +98,10 @@ export default function Task({ task }) {
         ></textarea>
         <button
           className="text-lg"
-          onClick={(e) =>
+          onClick={() =>
             updateTask.mutate({
               ...task,
-              status: mod(task.status + 1, 3),
+              status: mod(task.status + 1, 3) as Status,
             })
           }
         >

@@ -1,11 +1,20 @@
+import type { Task } from '../domain/Task'
+import type { TaskRequestDto } from '../domain/TaskRequestDto'
+import type { TaskResponseDto } from '../domain/TaskResponseDto'
 import api from './client'
-import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query'
+import {
+  useQuery,
+  useQueryClient,
+  useMutation,
+  type UseQueryResult,
+  type UseMutationResult,
+} from '@tanstack/react-query'
 
-export function useGetAllTasks() {
+export function useGetAllTasks(): UseQueryResult<Task[], Error> {
   return useQuery({
     queryKey: ['tasks'],
     queryFn: async () => {
-      const { data } = await api.get('/tasks')
+      const { data }: { data: Task[] } = await api.get('/tasks')
       console.log(data)
       return data
     },
@@ -16,20 +25,20 @@ export function useCreateTask() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (task) => {
-      const { tid, ...taskNoId } = task
+    mutationFn: async (newTask: Task) => {
+      const { tid, ...taskNoId } = newTask
       const { data } = await api.post('/tasks', taskNoId)
       console.log(data)
       return data
     },
     // optimistic update
-    onMutate: async (newTask) => {
+    onMutate: async (newTask: Task) => {
       await queryClient.cancelQueries({ queryKey: ['tasks'] })
 
       const previousTasks = queryClient.getQueryData(['tasks'])
 
       // optimistically update cache
-      queryClient.setQueryData(['tasks'], (old = []) => [
+      queryClient.setQueryData(['tasks'], (old: Task[] = []) => [
         ...old,
         { ...newTask, tid: crypto.randomUUID() },
       ])
@@ -53,20 +62,20 @@ export function useUpdateTask() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (task) => {
-      const { tid, ...taskNoId } = task
+    mutationFn: async (updatedTask: Task) => {
+      const { tid, ...taskNoId } = updatedTask
       const { data } = await api.patch(`/tasks?tid=${tid}`, taskNoId)
       console.log(data)
       return data
     },
     // optimistic update
-    onMutate: async (updatedTask) => {
+    onMutate: async (updatedTask: Task) => {
       await queryClient.cancelQueries({ queryKey: ['tasks'] })
 
       const previousTasks = queryClient.getQueryData(['tasks'])
 
       // optimistically update cache
-      queryClient.setQueryData(['tasks'], (old = []) =>
+      queryClient.setQueryData(['tasks'], (old: Task[] = []) =>
         old.map((task) =>
           task.tid === updatedTask.tid ? { ...updatedTask } : task
         )
@@ -91,19 +100,19 @@ export function useDeleteTask() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (task) => {
-      const { data } = await api.delete(`/tasks?tid=${task.tid}`)
+    mutationFn: async (deletedTask: Task) => {
+      const { data } = await api.delete(`/tasks?tid=${deletedTask.tid}`)
       console.log(data)
       return data
     },
     // optimistic update
-    onMutate: async (deletedTask) => {
+    onMutate: async (deletedTask: Task) => {
       await queryClient.cancelQueries({ queryKey: ['tasks'] })
 
       const previousTasks = queryClient.getQueryData(['tasks'])
 
       // optimistically update cache
-      queryClient.setQueryData(['tasks'], (old = []) =>
+      queryClient.setQueryData(['tasks'], (old: Task[] = []) =>
         old.filter((task) => task.tid !== deletedTask.tid)
       )
 

@@ -19,11 +19,8 @@ public class TaskBoardConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:3000")
-                        .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS");
-
-                registry.addMapping("/**")
-                        .allowedOrigins("https://taskboard-q0owc1i7c-noahs-projects-8c520327.vercel.app/")
+                        .allowedOrigins("http://localhost:3000",
+                                "https://taskboard-q0owc1i7c-noahs-projects-8c520327.vercel.app/")
                         .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS");
             }
         };

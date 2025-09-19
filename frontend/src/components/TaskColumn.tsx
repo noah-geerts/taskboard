@@ -1,11 +1,11 @@
-import { useContext } from 'react'
-import { TasksContext } from '../GlobalProvider'
-import { statusMap } from '../types/Types.js'
-import Task from './Task.jsx'
+import { useTasksContext } from '../GlobalProvider.js'
+import { statusMap } from '../utils/utils.js'
+import Task from './Task.js'
 import { useCreateTask } from '../api/taskService.js'
+import type { Status } from '../domain/Task.js'
 
-export default function TaskColumn({ status }) {
-  const { visibleTasks } = useContext(TasksContext)
+export default function TaskColumn({ status }: { status: Status }) {
+  const { visibleTasks } = useTasksContext()
   const createTask = useCreateTask()
   const thisStatusTasks = visibleTasks.filter((task) => task.status === status)
 
@@ -17,6 +17,7 @@ export default function TaskColumn({ status }) {
           className="h-6 text-xl"
           onClick={() =>
             createTask.mutate({
+              tid: -1,
               title: 'New Task',
               description: 'description',
               status: status,
