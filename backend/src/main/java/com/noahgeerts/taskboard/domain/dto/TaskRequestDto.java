@@ -1,4 +1,4 @@
-package com.noahgeerts.taskboard.domain;
+package com.noahgeerts.taskboard.domain.dto;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;

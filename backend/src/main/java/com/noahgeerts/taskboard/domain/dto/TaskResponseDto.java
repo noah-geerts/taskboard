@@ -1,4 +1,4 @@
-package com.noahgeerts.taskboard.domain;
+package com.noahgeerts.taskboard.domain.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
