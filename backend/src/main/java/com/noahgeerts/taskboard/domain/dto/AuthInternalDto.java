@@ -1,11 +1,15 @@
 package com.noahgeerts.taskboard.domain.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-public class AuthReponseDto {
+@NoArgsConstructor
+@AllArgsConstructor
+public class AuthInternalDto {
     private String jwt;
     private String refreshToken;
 }

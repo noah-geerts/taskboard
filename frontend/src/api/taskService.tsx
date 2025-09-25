@@ -1,13 +1,10 @@
 import type { Task } from '../domain/Task'
-import type { TaskRequestDto } from '../domain/TaskRequestDto'
-import type { TaskResponseDto } from '../domain/TaskResponseDto'
 import api from './client'
 import {
   useQuery,
   useQueryClient,
   useMutation,
   type UseQueryResult,
-  type UseMutationResult,
 } from '@tanstack/react-query'
 
 export function useGetAllTasks(): UseQueryResult<Task[], Error> {

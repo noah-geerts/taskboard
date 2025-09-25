@@ -1,9 +1,12 @@
+import axios from 'axios'
 import { useFilterContext } from '../GlobalProvider'
 import { priorityColors, priorityMap } from '../utils/utils'
+import { useNavigate } from 'react-router'
 
 export default function Header() {
   const { query, setQuery, selectedPriorities, setSelectedPriorities } =
     useFilterContext()
+  const navigate = useNavigate()
 
   function handleOptionClick(
     e: React.MouseEvent<HTMLButtonElement>,
@@ -55,6 +58,21 @@ export default function Header() {
           className="px-4 py-2 border-2 border-gray-200 rounded-md bg-white focus:outline-none focus:ring-0 focus:border-gray-400 transition-colors duration-200 min-w-[200px]"
         />
       </div>
+
+      {/* Log out */}
+      <button
+        onClick={async () => {
+          await axios.post(
+            import.meta.env.VITE_API_URL + '/auth/logout',
+            {},
+            { withCredentials: true }
+          )
+          localStorage.removeItem('jwt')
+          navigate('/auth/login')
+        }}
+      >
+        Log out
+      </button>
     </header>
   )
 }

@@ -15,20 +15,19 @@ import org.springframework.stereotype.Service;
 
 import com.noahgeerts.taskboard.domain.RefreshToken;
 import com.noahgeerts.taskboard.domain.User;
-import com.noahgeerts.taskboard.domain.dto.AuthReponseDto;
+import com.noahgeerts.taskboard.domain.dto.AuthInternalDto;
 import com.noahgeerts.taskboard.domain.dto.AuthRequestDto;
-import com.noahgeerts.taskboard.domain.dto.RefreshRequestDto;
 import com.noahgeerts.taskboard.persistence.RefreshTokenRepository;
 import com.noahgeerts.taskboard.persistence.UserRepository;
 
 @Service
-public class UserService {
+public class AuthService {
 
     private UserRepository userRepository;
     private RefreshTokenRepository refreshTokenRepository;
     private JwtService jwtService;
 
-    public UserService(UserRepository userRepository, JwtService jwtService,
+    public AuthService(UserRepository userRepository, JwtService jwtService,
             RefreshTokenRepository refreshTokenRepository) {
         this.userRepository = userRepository;
         this.jwtService = jwtService;
@@ -51,7 +50,7 @@ public class UserService {
         userRepository.save(newUser);
     }
 
-    public AuthReponseDto logIn(AuthRequestDto loginRequest) throws NameNotFoundException, AccessDeniedException {
+    public AuthInternalDto logIn(AuthRequestDto loginRequest) throws NameNotFoundException, AccessDeniedException {
         // Verify authentication
         Optional<User> userOptional = userRepository.findByEmail(loginRequest.getEmail());
         if (userOptional.isEmpty())
@@ -65,17 +64,19 @@ public class UserService {
         RefreshToken refreshToken = RefreshToken.builder().token(generateRefreshToken()).user(user)
                 .expiryDate(Instant.now().plus(Duration.ofDays(30))).revoked(false).build();
         refreshTokenRepository.save(refreshToken);
-        return AuthReponseDto.builder().jwt(jwt).refreshToken(refreshToken.getToken()).build();
+        return AuthInternalDto.builder().jwt(jwt).refreshToken(refreshToken.getToken()).build();
     }
 
-    public AuthReponseDto refresh(RefreshRequestDto refreshRequestDto) throws AccessDeniedException {
+    public AuthInternalDto refresh(String refreshToken) throws AccessDeniedException {
         // Check that refresh token is valid
-        Optional<RefreshToken> optionalToken = refreshTokenRepository.findByToken(refreshRequestDto.getToken());
+        Optional<RefreshToken> optionalToken = refreshTokenRepository.findByToken(refreshToken);
         if (optionalToken.isEmpty())
             throw new AccessDeniedException("Refresh token is invalid");
+        RefreshToken oldToken = optionalToken.get();
+        if (oldToken.getExpiryDate().isBefore(Instant.now()))
+            throw new AccessDeniedException("Refresh token is expired");
 
         // Delete old refresh token, create new one
-        RefreshToken oldToken = optionalToken.get();
         refreshTokenRepository.delete(oldToken);
         RefreshToken newToken = RefreshToken.builder().token(generateRefreshToken()).user(oldToken.getUser())
                 .expiryDate(Instant.now().plus(Duration.ofDays(30))).revoked(false).build();
@@ -83,7 +84,7 @@ public class UserService {
 
         // Create JWT
         String jwt = jwtService.generateToken(oldToken.getUser());
-        return AuthReponseDto.builder().jwt(jwt).refreshToken(newToken.getToken()).build();
+        return AuthInternalDto.builder().jwt(jwt).refreshToken(newToken.getToken()).build();
     }
 
 }

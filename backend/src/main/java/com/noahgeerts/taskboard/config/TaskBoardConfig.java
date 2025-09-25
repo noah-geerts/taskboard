@@ -1,5 +1,7 @@
 package com.noahgeerts.taskboard.config;
 
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,9 +33,12 @@ public class TaskBoardConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:3000",
-                                "https://taskboard-q0owc1i7c-noahs-projects-8c520327.vercel.app/")
-                        .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS");
+                        .allowedOrigins(
+                                "https://https://taskboard-omega-mocha.vercel.app/",
+                                "http://localhost:3000")
+                        .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+                        .allowedHeaders("*")
+                        .allowCredentials(true);
             }
         };
     }
