@@ -40,10 +40,6 @@ export default function Login() {
       })
   }
 
-  const handleClick: React.MouseEventHandler<HTMLButtonElement> = () => {
-    handleSubmit()
-  }
-
   return (
     <div className="w-full h-full flex flex-col justify-center items-center bg-gray-50">
       <div className="bg-white rounded-lg shadow-md p-8 w-full max-w-md">
