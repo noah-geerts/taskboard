@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { useFilterContext } from '../GlobalProvider'
+import { useFilterContext } from './GlobalProvider'
 import { priorityColors, priorityMap } from '../utils/utils'
 import { useNavigate } from 'react-router'
 

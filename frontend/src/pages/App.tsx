@@ -1,7 +1,6 @@
-import GlobalProvider from './GlobalProvider'
-import './App.css'
-import Header from './components/Header'
-import TaskColumn from './components/TaskColumn'
+import GlobalProvider from '../components/GlobalProvider'
+import Header from '../components/Header'
+import TaskColumn from '../components/TaskColumn'
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 

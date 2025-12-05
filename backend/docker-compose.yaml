@@ -8,4 +8,4 @@ services:
       POSTGRES_PASSWORD: testpass # DB password
       POSTGRES_DB: testdb # Initial database
     ports:
-      - "5432:5432" # Expose Postgres on host
+      - "5433:5432" # Expose Postgres on host

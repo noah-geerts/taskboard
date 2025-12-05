@@ -1,4 +1,4 @@
-import { useTasksContext } from '../GlobalProvider.js'
+import { useTasksContext } from './GlobalProvider.js'
 import { statusMap } from '../utils/utils.js'
 import Task from './Task.js'
 import { useCreateTask } from '../api/taskService.js'

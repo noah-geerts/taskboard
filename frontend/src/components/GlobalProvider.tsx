@@ -7,8 +7,8 @@ import {
   type Dispatch,
   type SetStateAction,
 } from 'react'
-import { useGetAllTasks } from './api/taskService'
-import type { Task } from './domain/Task'
+import { useGetAllTasks } from '../api/taskService'
+import type { Task } from '../domain/Task'
 
 type TasksContextValue = { visibleTasks: Task[] }
 type FilterContextValue = {

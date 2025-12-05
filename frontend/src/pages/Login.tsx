@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import axios from 'axios'
-import type { AuthResponseDto } from './domain/AuthResponseDto'
+import type { AuthResponseDto } from '../domain/AuthResponseDto'
 import { useNavigate, NavLink } from 'react-router'
 
 export default function Login() {
